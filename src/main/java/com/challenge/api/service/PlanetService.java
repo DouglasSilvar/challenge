@@ -61,6 +61,14 @@ public class PlanetService {
         return new PlanetDTO().toDto(planetPersisted);
     }
 
+    public void deletePlanet(String planet){
+        var planetPersisted = this.planetRepository.findByNameIgnoreCase(planet);
+        if(planetPersisted == null){
+            throw new RuntimeException("Planet not found for delete");
+        }
+        this.planetRepository.delete(planetPersisted);
+    }
+
     public PlanetDTO createPlanet(PlanetDTORequest dto){
         var planetPersisted = planetRepository.findByNameIgnoreCase(dto.getName());
         if(planetPersisted != null){

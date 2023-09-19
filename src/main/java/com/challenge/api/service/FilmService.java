@@ -20,7 +20,7 @@ public class FilmService {
     }
 
     public Film findById(Integer id){
-        return this.filmRepository.findById(id).orElse(null);
+        return this.filmRepository.findByEpisodeId(id);
     }
 
 

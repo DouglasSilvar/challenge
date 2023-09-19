@@ -22,17 +22,23 @@ public class PlanetController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<PlanetDTO>> getAllPosts(@PageableDefault Pageable pageable) {
-        return ResponseEntity.ok(service.getPaged(pageable));
+    public ResponseEntity<Page<PlanetDTO>> getAllPlanets(@PageableDefault Pageable pageable) {
+        return ResponseEntity.ok(this.service.getPaged(pageable));
     }
 
     @GetMapping(value = "/{planet}")
     public ResponseEntity<PlanetDTO> searchPlanet(@PathVariable String planet) {
-        return ResponseEntity.ok(service.searchPlanet(planet));
+        return ResponseEntity.ok(this.service.searchPlanet(planet));
     }
 
     @PostMapping
     public ResponseEntity<PlanetDTO> createPlanet(@Valid @RequestBody PlanetDTORequest planetDTO) {
-        return ResponseEntity.ok(service.createPlanet(planetDTO));
+        return ResponseEntity.ok(this.service.createPlanet(planetDTO));
+    }
+
+    @DeleteMapping(value = "/{planet}")
+    public ResponseEntity<Void> deletePlanet(@PathVariable String planet) {
+        this.service.deletePlanet(planet);
+        return ResponseEntity.noContent().build();
     }
 }

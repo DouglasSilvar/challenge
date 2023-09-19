@@ -21,16 +21,17 @@ public class SwapiClient {
     @Value("${swapi.url}")
     private String swapiUrl;
 
-    private static final String PLANET_ENDPOINT = "planets/?page=";
-    private static final String PLANET_ENDPOINT_SEARCH = "planets/?search=";
-    private static final String FILMS_ENDPOINT = "films/?page=";
+    private static final String PLANET_ENDPOINT = "planets/?";
+    private static final String FILMS_ENDPOINT = "films/?";
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public <T> T fetchData(String endpoint, Class<T> responseType, Integer page) {
+    private <T> T fetchData(String endpoint, Class<T> responseType, Integer page, String query) {
         try {
-            log.info("Initialize client on " + endpoint + page);
+            String finalEndpoint = (query != null && !query.isEmpty()) ? endpoint + "search=" + query : endpoint + "page=" + page;
+            log.info("Initialize client on " + finalEndpoint);
+
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI(swapiUrl+endpoint+page))
+                    .uri(new URI(swapiUrl + finalEndpoint))
                     .GET()
                     .build();
 
@@ -45,31 +46,16 @@ public class SwapiClient {
         }
     }
 
-    public PlanetResponseDTO searchPlanet(String planet) {
-        try {
-            log.info("Initialize client on " + PLANET_ENDPOINT_SEARCH + planet);
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI(swapiUrl + PLANET_ENDPOINT_SEARCH + planet))
-                    .GET()
-                    .build();
-
-            HttpResponse<String> response = HttpClient.newHttpClient()
-                    .send(request, HttpResponse.BodyHandlers.ofString());
-
-            return  objectMapper.readValue(response.body(), PlanetResponseDTO.class);
-
-        } catch (IOException | InterruptedException | URISyntaxException e) {
-            log.error("Error to search or convert data: ", e);
-            return null;
-        }
+    public PlanetResponseDTO fetchPlanets(Integer page) {
+        return fetchData(PLANET_ENDPOINT, PlanetResponseDTO.class, page, null);
     }
 
-    public PlanetResponseDTO fetchPlanets(Integer page) {
-        return fetchData(PLANET_ENDPOINT, PlanetResponseDTO.class, page);
+    public PlanetResponseDTO searchPlanet(String planet) {
+        return fetchData(PLANET_ENDPOINT, PlanetResponseDTO.class, null, planet);
     }
 
     public FilmResponseDTO fetchFilms(Integer page ) {
-        return fetchData(FILMS_ENDPOINT, FilmResponseDTO.class, page);
+        return fetchData(FILMS_ENDPOINT, FilmResponseDTO.class, page, null);
     }
 
 }
