@@ -18,7 +18,7 @@ public class Planet {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "planet_seq")
     @SequenceGenerator(name = "planet_seq", sequenceName = "planet_seq", initialValue = 1, allocationSize = 1)
     private Integer id;
-
+    @Column(unique = true, nullable = false)
     private String name;
     private String climate;
     private String terrain;

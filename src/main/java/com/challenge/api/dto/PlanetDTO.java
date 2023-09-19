@@ -26,13 +26,13 @@ public class PlanetDTO {
     private String climate;
     private String gravity;
     private String terrain;
+    private Integer filmsQuantity;
     @JsonProperty("surface_water")
     private String surfaceWater;
     private String population;
     private List<String> residents;
     private List<String> films;
     private List<FilmDTO> filmList;
-    private Integer filmsQuantity;
     private String created;
     private String edited;
     private String url;
